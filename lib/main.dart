@@ -9,7 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  //parei na aula 24
+  //parei na aula 24 no minuto 18
   runApp(const MyApp());
 }
 

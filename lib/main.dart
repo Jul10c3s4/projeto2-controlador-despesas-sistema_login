@@ -3,7 +3,9 @@ import 'package:controlador_despesas/pages/adicionardespesa.dart';
 import 'package:controlador_despesas/pages/destaque_page.dart';
 import 'package:controlador_despesas/pages/login.dart';
 import 'package:controlador_despesas/pages/splash_screen.dart';
-import 'package:controlador_despesas/store/login_store.dart';
+import 'package:controlador_despesas/util/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +20,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<LoginStore>(
-        create: (_) => LoginStore(),
-        child: MaterialApp(
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return FirebaseAuthApp();
+        }
+
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+
+  FirebaseAuthApp() {
+    FirebaseAuthAppRoutes Rotas = FirebaseAuthAppRoutes();
+    return MaterialApp(
             localizationsDelegates: [
               GlobalWidgetsLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -28,11 +42,6 @@ class MyApp extends StatelessWidget {
             supportedLocales: [Locale("pt", "BR")],
             debugShowCheckedModeBanner: false,
             initialRoute: "/login",
-            routes: <String, WidgetBuilder>{
-              '/homepage': (context) => const DestaquePage(),
-              '/splash': (context) => const SplashSreen(rota: '/homepage'),
-              '/add_despesa': (context) => const AddDespesa(),
-              '/login': (context) => const Login()
-            }));
+            routes: Rotas.routes);
   }
 }

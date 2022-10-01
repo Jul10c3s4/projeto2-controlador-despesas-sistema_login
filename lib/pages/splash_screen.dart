@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../util/firebase_auth_app_navigator.dart';
+
 class SplashSreen extends StatefulWidget {
   final String rota;
   const SplashSreen({super.key, required this.rota});
@@ -34,6 +36,6 @@ class _SplashSreenState extends State<SplashSreen> {
 
   void animacao() async {
     await Future.delayed(const Duration(seconds: 4));
-    Navigator.pushReplacementNamed(context, widget.rota);
+    FirebaseAuthAppNavigator.goToLogin(context);
   }
 }

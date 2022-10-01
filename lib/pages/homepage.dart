@@ -33,6 +33,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.exit_to_app_outlined,
+            color: Colors.amber,
+          ),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+        ),
         backgroundColor: Color(0xFF373737),
         centerTitle: true,
         title: Text(
@@ -47,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               const PopupMenuItem<OrderOptions>(
                   value: OrderOptions.orderaz, child: Text("Ordenar de A-Z")),
               const PopupMenuItem<OrderOptions>(
-                  value: OrderOptions.orderza, child: Text("Ordenar de Z-A"))
+                  value: OrderOptions.orderza, child: Text("Ordenar de Z-A")),
             ],
           ),
         ],
@@ -156,149 +165,151 @@ class _HomePageState extends State<HomePage> {
               color: const Color(0xFFFFFAEF),
               borderRadius: BorderRadius.circular(15)),
           child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //descrição
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //descrição
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        children: [
-                          Text(
-                            '${despesas[index].descricao ?? ""}',
-                            style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-                  //tipo de despesa
-                  Column(children: [
-                      Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Wrap(
-                        children: [
-                          Text(
-                            'Tipo de Despesa:',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            '${despesas[index].tipoDesp ?? ""}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  //Data
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Prazo: ',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        '${despesas[index].dataText}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  //valor
                   Wrap(
+                    alignment: WrapAlignment.center,
                     children: [
-                      const Text(
-                        'Valor: ',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
                       Text(
-                        '${despesas[index].valor ?? ""}',
+                        '${despesas[index].descricao ?? ""}',
                         style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(
+                height: 10,
+              ),
+              //tipo de despesa
+              Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                      children: [
+                        Text(
+                          'Tipo de Despesa:',
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Colors.redAccent),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      
-                    ],
-                  ),
-                    ]),
-                  
-                  SizedBox(
-                    width: 5,
-                  ),
-                  /*Row(
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          '${despesas[index].tipoDesp ?? ""}',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                //Data
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Prazo: ',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '${despesas[index].dataText}',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                //valor
+                Wrap(
+                  children: [
+                    const Text(
+                      'Valor: ',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '${despesas[index].valor ?? ""}',
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.redAccent),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [],
+                ),
+              ]),
+
+              SizedBox(
+                width: 5,
+              ),
+              /*Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(DateFormat('dd/MM/yyyy').format(despesas.dateText)),
                       ],
                     ),*/
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 20,),
-                  child:  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        despesas.removeAt(index);
-                        //helper.updateStatus(despesas[index]);
-                      });
-                    },
-                    child: const Text(
-                      'Paguei',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepOrangeAccent,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 60)),
-                  ),),
-                  SizedBox(
-          height: 15,
-        )
-                ],
+              SizedBox(
+                height: 5,
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      despesas.removeAt(index);
+                      //helper.updateStatus(despesas[index]);
+                    });
+                  },
+                  child: const Text(
+                    'Paguei',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.deepOrangeAccent,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 60)),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              )
+            ],
+          ),
         ),
         SizedBox(
           height: 15,
@@ -311,8 +322,8 @@ class _HomePageState extends State<HomePage> {
     helper.getAllDespesas().then((list) {
       setState(() {
         despesas = list;
-        for(int i = 0; i < despesas.length; i++){
-          if(despesas[i].status == "true"){
+        for (int i = 0; i < despesas.length; i++) {
+          if (despesas[i].status == "true") {
             despPedentes.add(despesas[i]);
           }
         }

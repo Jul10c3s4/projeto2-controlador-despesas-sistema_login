@@ -1,4 +1,3 @@
-import 'package:controlador_despesas/pages/criar%20conta.dart';
 import 'package:controlador_despesas/pages/destaque_page.dart';
 import 'package:controlador_despesas/util/firebase_auth_app_navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,14 +10,14 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import '../widgets/customIconButton.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class CriarConta extends StatefulWidget {
+  const CriarConta({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<CriarConta> createState() => _CriarContaState();
 }
 
-class _LoginState extends State<Login> with TickerProviderStateMixin {
+class _CriarContaState extends State<CriarConta> with TickerProviderStateMixin {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _senha = TextEditingController();
 
@@ -27,40 +26,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   String get userName => _email.text;
   String get userPassword => _senha.text;
 
-  late AnimationController _iconAnimationController;
-  late AnimationController _formAnimationController;
-  late Animation<double> _iconAnimation;
-  late Animation<double> _formAnimation;
-
   late ReactionDisposer disposer;
   bool loading = false;
   bool visible = true;
   bool enable = true;
   bool color = false;
-
-  void initState() {
-    super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
-
-    _formAnimationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-
-    _iconAnimationController = AnimationController(
-        vsync: this, duration: const Duration(microseconds: 1000));
-
-    _formAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      _formAnimationController,
-    );
-
-    _iconAnimation = CurvedAnimation(
-        parent: _iconAnimationController, curve: Curves.easeInOut);
-
-    _iconAnimation.addListener(() {
-      this.setState(() {});
-    });
-    playAnimation();
-  }
 
   void dispose() {
     super.dispose();
@@ -74,6 +44,16 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       body: ListView(
         children: [
           Column(children: [
+            Row(
+              children: [
+                IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/login');
+            }),
+              ],
+            ),
+            
             Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -117,7 +97,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                                         BorderRadius.circular(
                                                             20)),
                                                 child: Text(
-                                                  "Login",
+                                                  "Criar Conta",
                                                   style: TextStyle(
                                                     fontSize: 25,
                                                     fontWeight: FontWeight.w800,
@@ -140,9 +120,14 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                                 color: Colors.white),
                                             child: TextFormField(
                                               validator: (value) {
-                                                if (!value!.contains('@')) {
+                                                if (!value!.contains('@gmail.com')) {
                                                   return "Falta o @gmail.com";
                                                 }
+                                              },
+                                              onChanged: (value) {
+                                                isFormValid
+                                                    ? color = true
+                                                    : color = false;
                                               },
                                               controller: _email,
                                               //onChanged: (value) => ,
@@ -232,39 +217,53 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 10,
-                                          ),
-                                          InkWell(
-                                            child: Text(
-                                              'Criar conta!',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.blue.shade500),
-                                            ),
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: ((context) =>
-                                                          CriarConta())));
-                                            },
-                                          ),
-                                          SizedBox(
-                                            height: 20,
+                                            height: 30,
                                           ),
                                           ElevatedButton(
                                             onPressed: () {
                                               _formkey.currentState!.validate()
-                                                  ? _logar(
+                                                  ? registrar(
                                                       context) /*loginStore.loginPressed*/
-                                                  : null;
+                                                  : showDialog(
+                                                      context: context,
+                                                      builder: ((context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                            "Erro",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red),
+                                                          ),
+                                                          content: Text(
+                                                              "insira os dados corretamente como solicitados"),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                "ok",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                              style: ElevatedButton
+                                                                  .styleFrom(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .blue),
+                                                            )
+                                                          ],
+                                                        );
+                                                      }));
                                             },
                                             child: loading
                                                 ? const CircularProgressIndicator(
                                                     color: Colors.white,
                                                   )
                                                 : const Text(
-                                                    "Entrar",
+                                                    "Criar",
                                                     style: TextStyle(
                                                       fontSize: 25,
                                                       color: Colors.white,
@@ -300,21 +299,20 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     ));
   }
 
-  void _logar(BuildContext context) async {
+  void registrar(BuildContext context) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: userName, password: userPassword);
-
+          .createUserWithEmailAndPassword(
+              email: userName, password: userPassword);
       User? user = userCredential.user;
 
       if (user != null) {
         _email.text = "";
         _senha.text = "";
-        FirebaseAuthAppNavigator.goToHome(context);
+        FirebaseAuthAppNavigator.goToLogin(context);
       }
-      print("signed in: ${user!.uid}");
     } catch (e) {
-      print("Error: ${e.toString()}");
+      print(e);
       showDialog(
           context: context,
           builder: ((context) {
@@ -323,7 +321,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 "Erro",
                 style: TextStyle(color: Colors.red),
               ),
-              content: Text("Email ou senha incorretos!"),
+              content: Text("Falha ao criar registro!"),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -341,27 +339,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     }
   }
 
-  Future playAnimation() async {
-    try {
-      await _iconAnimationController.forward().orCancel;
-      await _formAnimationController.forward().orCancel;
-    } on TickerCanceled {
-      // animação cancelada
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   bool get isFormValid => userName.contains("@") && userPassword.length >= 6;
   bool get isEmailValid => userName.contains("@");
   bool get isSenhaValid => userPassword.length >= 6;
-
-  Widget? dialog(String? titulo, String? subtitulo) {
-    AlertDialog(
-      title: Text(
-        "$titulo",
-      ),
-      content: Text("$subtitulo"),
-    );
-  }
 }

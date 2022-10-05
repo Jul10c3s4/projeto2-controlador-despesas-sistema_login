@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  FirebaseAuthApp() {
+  Widget FirebaseAuthApp() {
     FirebaseAuthAppRoutes Rotas = FirebaseAuthAppRoutes();
     return MaterialApp(
             localizationsDelegates: [
